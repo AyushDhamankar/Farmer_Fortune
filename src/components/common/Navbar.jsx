@@ -56,9 +56,17 @@ const Navbar = ({ saveState }) => {
     }
   };  
 
-  // useEffect(()=>{
-  //   init();
-  // }, []);
+  const handleLogout = () => {
+    // Implement logout functionality here
+    saveState({ web3: null, contract: null });
+    setUserName("");
+    setUserType("");
+    setConnectedToMeta(false);
+  };
+
+  useEffect(()=>{
+    init();
+  }, []);
 
   return (
       <header className="flex md:sticky top-0 z-[100] md:backdrop-blur-3xl md:px-16 px-6 text-gray-600  w-full justify-between md:p-5 flex-col md:flex-row items-center">
@@ -86,10 +94,10 @@ const Navbar = ({ saveState }) => {
             />
           </div>
         ) : (
-          // Need to change based on the connected account details
           <div className="flex flex-row cursor-pointer items-center max-md:pt-5">
             <button
               className={`items-center text-black bg-white border border-black py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
+              onClick={handleLogout}
             >
               {username != "" ? username : "New User"} {usertype == 0 && username != "" ? "(F)" : usertype == 1 && username != "" ? "(D)" : usertype == 2 && username != "" ? "(V)" : usertype == 3 && username != "" ? "(C)" : ""}
             </button>
