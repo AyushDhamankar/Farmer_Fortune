@@ -42,8 +42,8 @@ const CreatePost = ({ state }) => {
   const block = async (imageUrl) => {
     try {
       setIsLoading(true);
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, alchemyweb3, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       console.log(accounts[0]);
       console.log(imageUrl, name, description, quantity, price);
       await contract.methods
@@ -115,8 +115,8 @@ const CreatePost = ({ state }) => {
 
   const get_Own_Product = async () => {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
       console.log(accounts);
       let distributor;
@@ -140,8 +140,8 @@ const CreatePost = ({ state }) => {
 
   const getUser = async () => {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       // const accounts = await window.ethereum.request({
       //   method: "eth_requestAccounts",
       // });

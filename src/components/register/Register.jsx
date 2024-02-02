@@ -34,8 +34,8 @@ const Register = ({ state }) => {
         (Role === 0 || Role === 1 || Role === 2 || Role === 3)
       ) {
         setIsLoading(true);
-        const { contract, web3 } = state;
-        const accounts = await web3.eth.getAccounts();
+        const { contract, web3, accounts } = state;
+        // const accounts = await web3.eth.getAccounts();
         console.log(accounts[0]);
         console.log(name, email, Role);
         await contract.methods
@@ -86,6 +86,7 @@ const Register = ({ state }) => {
 
   return (
     <>
+    {isLoading && <Loading />}
       <ToastContainer />
       <section className="flex flex-col justify-center items-center">
         <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">

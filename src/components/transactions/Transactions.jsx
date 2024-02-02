@@ -84,8 +84,8 @@ const Transactions = ({ state }) => {
 
   async function getUser() {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       
       // Check if there are accounts available
       if (accounts.length === 0) {
@@ -120,7 +120,15 @@ const Transactions = ({ state }) => {
       getVendorDetail();
     } else if(value2 == 3 && value3 == "true") {
       getVendorDetail();
-    } 
+    }
+
+    // Setup interval to run fetchData every, for example, 5 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 1000); // 1000 milliseconds = 1 seconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, [contract, value1, value2, value3]);
 
   //
@@ -143,8 +151,8 @@ const Transactions = ({ state }) => {
   // Handle saving the new price
   const handleSaveClick = async() => {
     setIsEditing(false);
-    const { contract, web3 } = state;
-    const accounts = await web3.eth.getAccounts();
+    const { contract, web3, accounts } = state;
+    // const accounts = await web3.eth.getAccounts();
     console.log(accounts[0]);
     console.log(value1, price);
     if(value2 == 1 && value3 == "false") {

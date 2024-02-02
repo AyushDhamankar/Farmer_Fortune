@@ -11,8 +11,10 @@ import { useState } from "react";
 function App() {
 
   const [state, setState] = useState({
+    alchemyweb3: null,
     web3: null,
     contract: null,
+    accounts: null,
   });
 
   const saveState = (state) => {

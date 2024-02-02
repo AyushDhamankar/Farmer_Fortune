@@ -15,6 +15,16 @@ const Navbar = ({ saveState }) => {
       // Check if Web3 is available
       if (window.ethereum) {
         // Initialize Web3 using MetaMask provider
+        // const web3 = new Web3(window.ethereum);
+
+        // Replace 'YOUR_ALCHEMY_API_KEY' with your actual Alchemy API key
+        const alchemyApiKey = '_gda5EFG-n3zSegy8XdZfMkTORS8oWVd';
+
+        // Use the Alchemy API URL for the Polygon Mumbai testnet
+        const alchemyUrl = 'https://polygon-mumbai.g.alchemy.com/v2/' + alchemyApiKey;
+
+        const alchemyweb3 = new Web3(new Web3.providers.HttpProvider(alchemyUrl));
+
         const web3 = new Web3(window.ethereum);
   
         // Connect to the contract using its ABI and address
@@ -22,10 +32,7 @@ const Navbar = ({ saveState }) => {
           ABI, // Replace with your contract's ABI
           "0x758c002516cE3f477103f6A8B56F8600EB911B43" // Replace with your contract's address
         );
-  
-        // Save Web3 and contract in the application state
-        saveState({ web3: web3, contract: contract });
-  
+
         // Request user accounts from MetaMask
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
@@ -33,6 +40,9 @@ const Navbar = ({ saveState }) => {
   
         // Log user accounts
         console.log(accounts);
+  
+        // Save Web3 and contract in the application state
+        saveState({ alchemyweb3: alchemyweb3, web3: web3, contract: contract, accounts: accounts });
   
         // Get user details from the contract
         const user = await contract.methods.User_Type_Mapping(accounts[0]).call();

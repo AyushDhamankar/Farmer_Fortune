@@ -67,8 +67,8 @@ const Explore = ({ state }) => {
   // Example usage
   async function fetchData() {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
       let length;
       if (user.role == 1 || user.role == 0) {
@@ -121,7 +121,14 @@ const Explore = ({ state }) => {
 
   useEffect(() => {
     fetchData();
-    console.log(farmerPosts);
+
+    // Setup interval to run fetchData every, for example, 5 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 1000); // 1000 milliseconds = 1 seconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, [state]);
   return (
     <section className="flex flex-col justify-center items-center">

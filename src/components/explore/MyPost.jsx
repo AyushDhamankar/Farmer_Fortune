@@ -7,10 +7,10 @@ const MyPost = ({ state }) => {
   const [role, setRole] = useState();
 
   async function getFarmerPost(length) {
-    const { contract, web3 } = state;
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
+    const { contract, web3, accounts } = state;
+    // const accounts = await window.ethereum.request({
+    //   method: "eth_requestAccounts",
+    // });
     const filteredPosts = [];
 
     for (let i = 0; i < length; i++) {
@@ -31,10 +31,10 @@ const MyPost = ({ state }) => {
   }
 
   async function getDistributorPost(length) {
-    const { contract, web3 } = state;
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
+    const { contract, web3, accounts } = state;
+    // const accounts = await window.ethereum.request({
+    //   method: "eth_requestAccounts",
+    // });
     const filteredPosts = [];
 
     for (let i = 0; i < length; i++) {
@@ -55,10 +55,10 @@ const MyPost = ({ state }) => {
   }
 
   async function getVendorPost(length) {
-    const { contract, web3 } = state;
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
+    const { contract, web3, accounts } = state;
+    // const accounts = await window.ethereum.request({
+    //   method: "eth_requestAccounts",
+    // });
     const filteredPosts = [];
 
     for (let i = 0; i < length; i++) {
@@ -79,8 +79,8 @@ const MyPost = ({ state }) => {
   }
 
   async function getVendorPost1(length) {
-    const { contract, web3 } = state;
-    const accounts = await web3.eth.getAccounts();
+    const { contract, web3, accounts } = state;
+    // const accounts = await web3.eth.getAccounts();
     const filteredPosts = [];
 
     for (let i = 0; i < length; i++) {
@@ -123,8 +123,8 @@ const MyPost = ({ state }) => {
 
   const get_Own_Product = async () => {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       console.log("Distributor");
       const distributor = await contract.methods
         .get_Owned_Properties(accounts[0], 2).call();
@@ -138,8 +138,8 @@ const MyPost = ({ state }) => {
   // Function to fetch Farmer_Posts
   async function fetchFarmerPosts() {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
 
       let length;
@@ -163,8 +163,8 @@ const MyPost = ({ state }) => {
 
   async function getUser() {
     try {
-      const { contract, web3 } = state;
-      const accounts = await web3.eth.getAccounts();
+      const { contract, web3, accounts } = state;
+      // const accounts = await web3.eth.getAccounts();
       
       // Check if there are accounts available
       if (accounts.length === 0) {
@@ -183,6 +183,14 @@ const MyPost = ({ state }) => {
   useEffect(() => {
     getUser();
     fetchFarmerPosts();
+
+    // Setup interval to run fetchData every, for example, 5 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 1000); // 1000 milliseconds = 1 seconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, [state]);
   return (
     <section className="flex flex-col justify-center items-center">
