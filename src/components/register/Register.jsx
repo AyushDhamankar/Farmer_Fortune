@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import PostProduct from "../../assets/common/fotor-ai-2023112116513 1.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../Loading/Loading";
 
 const Register = ({ state }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLocationChange = (event) => {
     setRole(event.target.value);
@@ -31,6 +33,7 @@ const Register = ({ state }) => {
         email !== "" &&
         (Role === 0 || Role === 1 || Role === 2 || Role === 3)
       ) {
+        setIsLoading(true);
         const { contract, web3 } = state;
         const accounts = await web3.eth.getAccounts();
         console.log(accounts[0]);
@@ -49,6 +52,7 @@ const Register = ({ state }) => {
           theme: "dark",
         });
         console.log("Hii");
+        setIsLoading(false);
       } else {
         toast.error("Check all field must need to be fill.", {
           position: "top-right",
@@ -60,6 +64,7 @@ const Register = ({ state }) => {
           progress: undefined,
           theme: "dark",
         });
+        setIsLoading(false);
         console.log("Byee");
       }
     } catch (error) {
@@ -74,6 +79,7 @@ const Register = ({ state }) => {
           progress: undefined,
           theme: "dark",
         });
+        setIsLoading(false);
       }
     }
   };

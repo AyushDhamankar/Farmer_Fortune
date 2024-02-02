@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostProduct from "../../assets/banner/post-product.webp";
 import Card from "../common/Card";
+import Loading from "../Loading/Loading";
 
 const CreatePost = ({ state }) => {
   const [img, setImg] = useState("");
@@ -8,6 +9,7 @@ const CreatePost = ({ state }) => {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitImage = async (event) => {
     try {
@@ -39,6 +41,7 @@ const CreatePost = ({ state }) => {
 
   const block = async (imageUrl) => {
     try {
+      setIsLoading(true);
       const { contract, web3 } = state;
       const accounts = await web3.eth.getAccounts();
       console.log(accounts[0]);
@@ -47,8 +50,10 @@ const CreatePost = ({ state }) => {
         .Farmer_Post_Create(imageUrl, name, description, quantity, price)
         .send({ from: accounts[0] });
       console.log("Hiii1");
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
       throw error; // Rethrow the error
     }
   };
@@ -156,6 +161,8 @@ const CreatePost = ({ state }) => {
   //
 
   return (
+    <>
+    {isLoading && <Loading />}
     <section className="flex flex-col justify-center items-center">
       <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">
         Post Product
@@ -257,6 +264,7 @@ const CreatePost = ({ state }) => {
         </div>
       )}
     </section>
+    </>
   );
 };
 
