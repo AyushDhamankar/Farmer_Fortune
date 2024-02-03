@@ -88,9 +88,9 @@ const Card = ({
   };
 
   return (
-    <div className="flex text-[#000000A8] border border-[#00000018] flex-col shadow-2xl rounded-lg w-[90%] md:w-[28vw]">
+    <div className="flex text-[#000000A8] border border-[#00000018] flex-col shadow-2xl rounded-lg w-[90%] md:w-[28vw] overflow-hidden">
       <div>
-        <img src={img} alt="" className="w-full" />
+        <img src={img} alt="" className="w-full h-[30vh] object-cover" />
       </div>
       <div className={`${farmer == 0 && myposts != true ? "pb-0" : "pb-3"}`}>
         <div className="flex flex-col">
