@@ -142,7 +142,7 @@ const Explore = ({ state }) => {
           name=""
           id=""
           placeholder="Search here..."
-          className="md:w-2/5 w-[80%] px-4 md:px-8 py-3.5 rounded-lg text-sm bg-bg-gray outline-none"
+          className="md:w-2/5 w-[80%] px-4 md:px-8 py-3.5 rounded-lg text-sm focus:bg-[#656565] hover:bg-[#656565] duration-300 hover:text-white bg-bg-gray outline-none"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -155,7 +155,7 @@ const Explore = ({ state }) => {
           <img
             src={Search}
             alt=""
-            className="px-4 py-3.5 rounded-lg bg-bg-gray"
+            className="px-4 py-3.5 rounded-lg hover:bg-[#656565] duration-300 bg-bg-gray"
           />
         </button>
       </div>
