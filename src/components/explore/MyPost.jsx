@@ -1,10 +1,12 @@
 import React from "react";
 import Card from "../common/Card";
 import { useState, useEffect } from "react";
+import { Skeletoncard } from "../common/SkeletonCard";
 
 const MyPost = ({ state }) => {
   const [farmerPosts, setFarmerPosts] = useState([]);
   const [role, setRole] = useState();
+  const [loadData, setLoadData] = useState(false);
 
   async function getFarmerPost(length) {
     const { contract, web3, accounts } = state;
@@ -27,6 +29,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
+    setLoadData(false);
     console.log(filteredPosts);
   }
 
@@ -38,11 +41,14 @@ const MyPost = ({ state }) => {
     const filteredPosts = [];
 
     for (let i = 0; i < length; i++) {
-      const farmerPost = await contract.methods.Distributor_Post_Array(i).call();
+      const farmerPost = await contract.methods
+        .Distributor_Post_Array(i)
+        .call();
       console.log(`Farmer_Post[${i}]:`, farmerPost);
 
       if (
-        farmerPost.Distributor_address.toLowerCase() === accounts[0].toLowerCase()
+        farmerPost.Distributor_address.toLowerCase() ===
+        accounts[0].toLowerCase()
       ) {
         farmerPost.id = farmerPost.Distributor_Post_id;
         farmerPost.price = farmerPost.Distributor_price;
@@ -51,6 +57,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
+    setLoadData(false);
     console.log(filteredPosts);
   }
 
@@ -66,7 +73,8 @@ const MyPost = ({ state }) => {
       console.log(`Farmer_Post[${i}]:`, farmerPost);
 
       if (
-        farmerPost.Vendor_address.toLowerCase() === accounts[0].toLowerCase() && farmerPost.status == 0
+        farmerPost.Vendor_address.toLowerCase() === accounts[0].toLowerCase() &&
+        farmerPost.status == 0
       ) {
         farmerPost.id = farmerPost.Vendor_Post_id;
         farmerPost.price = farmerPost.Vendor_price;
@@ -74,6 +82,7 @@ const MyPost = ({ state }) => {
         filteredPosts.push(farmerPost);
       }
     }
+    setLoadData(false);
     setFarmerPosts(filteredPosts);
     console.log(filteredPosts);
   }
@@ -97,6 +106,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
+    setLoadData(false);
     console.log(filteredPosts);
   }
 
@@ -106,18 +116,21 @@ const MyPost = ({ state }) => {
       // Array to store results
       const results = [];
       console.log(indices);
-  
+
       for (let i = 0; i < indices.length; i++) {
-        const result = await contract.methods.Vendor_Post_Array(indices[i]).call();
+        const result = await contract.methods
+          .Vendor_Post_Array(indices[i])
+          .call();
         result.id = result.Vendor_Post_id;
         result.price = result.Vendor_price;
         results.push(result);
       }
       console.log(results);
+      setLoadData(false);
       setFarmerPosts(results);
-      console.log('Farmer Post Data:', results);
+      console.log("Farmer Post Data:", results);
     } catch (error) {
-      console.error('Error calling Farmer_Post_Array:', error);
+      console.error("Error calling Farmer_Post_Array:", error);
     }
   }
 
@@ -127,17 +140,20 @@ const MyPost = ({ state }) => {
       // const accounts = await web3.eth.getAccounts();
       console.log("Distributor");
       const distributor = await contract.methods
-        .get_Owned_Properties(accounts[0], 2).call();
-      console.log("Hiii",distributor);
+        .get_Owned_Properties(accounts[0], 2)
+        .call();
+      console.log("Hiii", distributor);
       await getFarmerPostData(distributor);
+    setLoadData(false);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   // Function to fetch Farmer_Posts
   async function fetchFarmerPosts() {
     try {
+      setLoadData(true);
       const { contract, web3, accounts } = state;
       // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
@@ -155,6 +171,7 @@ const MyPost = ({ state }) => {
       } else if (user.role == 3) {
         get_Own_Product();
       }
+
       console.log("Farmer_Post_Array Length:", length);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -165,13 +182,13 @@ const MyPost = ({ state }) => {
     try {
       const { contract, web3, accounts } = state;
       // const accounts = await web3.eth.getAccounts();
-      
+
       // Check if there are accounts available
       if (accounts.length === 0) {
         console.error("No Ethereum accounts available");
         return;
       }
-  
+
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
       setRole(user.role);
     } catch (error) {
@@ -179,19 +196,19 @@ const MyPost = ({ state }) => {
       // Handle the error (e.g., show a message to the user)
     }
   }
-  
+
   useEffect(() => {
     getUser();
     fetchFarmerPosts();
 
     // Setup interval to run fetchData every, for example, 5 seconds
-    const intervalId = setInterval(() => {
-      getUser();
-      fetchFarmerPosts();
-    }, 1000); // 1000 milliseconds = 1 seconds
+    // const intervalId = setInterval(() => {
+    //   getUser();
+    //   fetchFarmerPosts();
+    // }, 1000); // 1000 milliseconds = 1 seconds
 
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
+    // // Clean up the interval when the component unmounts
+    // return () => clearInterval(intervalId);
   }, [state]);
   return (
     <section className="flex flex-col justify-center items-center">
@@ -200,23 +217,31 @@ const MyPost = ({ state }) => {
       </div>
 
       <div className="flex flex-wrap justify-center items-center gap-10 py-10">
-        {farmerPosts.map((post, index) => (
+        {!loadData ? (
+          farmerPosts.map((post, index) => (
+            <>
+              <Card
+                state={state}
+                id={post.id}
+                img={post.img}
+                title={post.Product_name}
+                desc={post.Product_description}
+                owner={"Me"}
+                quantity={post.Product_quantity}
+                price={post.price}
+                myposts={true}
+                transaction_id={post.transaction_id}
+                role={role}
+              />
+            </>
+          ))
+        ) : (
           <>
-            <Card
-              state={state}
-              id={post.id}
-              img={post.img}
-              title={post.Product_name}
-              desc={post.Product_description}
-              owner={"Me"}
-              quantity={post.Product_quantity}
-              price={post.price}
-              myposts={true}
-              transaction_id={post.transaction_id}
-              role={role}
-            />
+            <Skeletoncard />
+            <Skeletoncard />
+            <Skeletoncard />
           </>
-        ))}
+        )}
       </div>
     </section>
   );

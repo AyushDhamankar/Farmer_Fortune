@@ -2,14 +2,15 @@ import React from "react";
 import Card from "../common/Card";
 import Search from "../../assets/svg/search-icon.svg";
 import { useState, useEffect } from "react";
+import { Skeletoncard } from "../common/SkeletonCard";
 
 const Explore = ({ state }) => {
   const [name, setName] = useState("");
   const [farmerPosts, setFarmerPosts] = useState([]);
   const [farmerPosts1, setFarmerPosts1] = useState([]);
   const [role, setRole] = useState();
+  const [loadData, setLoadData] = useState(false);
 
-  //
   // Function to get a specific Farmer_Post from Farmer_Post_Array
   async function getFarmerPost(index) {
     try {
@@ -67,6 +68,7 @@ const Explore = ({ state }) => {
   // Example usage
   async function fetchData() {
     try {
+      setLoadData(true);
       const { contract, web3, accounts } = state;
       // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
@@ -99,6 +101,7 @@ const Explore = ({ state }) => {
       }
       setFarmerPosts(posts);
       setFarmerPosts1(posts);
+      setLoadData(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -123,12 +126,11 @@ const Explore = ({ state }) => {
     fetchData();
 
     // Setup interval to run fetchData every, for example, 5 seconds
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 1000); // 1000 milliseconds = 1 seconds
-
+    // const intervalId = setInterval(() => {
+    //   fetchData();
+    // }, 5000); // 1000 milliseconds = 1 seconds
     // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, [state]);
   return (
     <section className="flex flex-col justify-center items-center">
@@ -161,21 +163,30 @@ const Explore = ({ state }) => {
       </div>
 
       <div className="flex flex-wrap justify-center items-center gap-10 py-10">
-        {farmerPosts.map((post, index) => (
+        {!loadData ? (
+          farmerPosts?.map((post, index) => (
+            <>
+              <Card
+                key={index}
+                state={state}
+                id={post.id}
+                img={post.img}
+                title={post.Product_name}
+                desc={post.Product_description}
+                owner={post.name}
+                quantity={post.Product_quantity}
+                price={post.price}
+                role={role}
+              />
+            </>
+          ))
+        ) : (
           <>
-            <Card
-              state={state}
-              id={post.id}
-              img={post.img}
-              title={post.Product_name}
-              desc={post.Product_description}
-              owner={post.name}
-              quantity={post.Product_quantity}
-              price={post.price}
-              role={role}
-            />
+            <Skeletoncard />
+            <Skeletoncard />
+            <Skeletoncard />
           </>
-        ))}
+        )}
       </div>
     </section>
   );
