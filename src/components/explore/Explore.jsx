@@ -125,13 +125,15 @@ const Explore = ({ state }) => {
   useEffect(() => {
     fetchData();
 
-    // Setup interval to run fetchData every, for example, 5 seconds
-    // const intervalId = setInterval(() => {
-    //   fetchData();
-    // }, 5000); // 1000 milliseconds = 1 seconds
-    // Clean up the interval when the component unmounts
-    // return () => clearInterval(intervalId);
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [state]);
+
   return (
     <section className="flex flex-col justify-center items-center">
       <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10">
@@ -144,7 +146,7 @@ const Explore = ({ state }) => {
           name=""
           id=""
           placeholder="Search here..."
-          className="md:w-2/5 w-[80%] px-4 md:px-8 py-3.5 rounded-lg text-sm focus:bg-[#656565] hover:bg-[#656565] duration-300 hover:text-white bg-bg-gray outline-none"
+          className="md:w-2/5 w-[80%] px-4 md:px-8 py-3.5 rounded-lg text-sm focus:bg-[#656565] hover:bg-[#656565] duration-300 focus:text-white hover:text-white bg-bg-gray outline-none"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />

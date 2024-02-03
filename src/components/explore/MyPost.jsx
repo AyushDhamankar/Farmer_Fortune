@@ -201,14 +201,12 @@ const MyPost = ({ state }) => {
     getUser();
     fetchFarmerPosts();
 
-    // Setup interval to run fetchData every, for example, 5 seconds
-    // const intervalId = setInterval(() => {
-    //   getUser();
-    //   fetchFarmerPosts();
-    // }, 1000); // 1000 milliseconds = 1 seconds
+    const intervalId = setInterval(() => {
+      getUser();
+      fetchFarmerPosts();
+    }, 5000);
 
-    // // Clean up the interval when the component unmounts
-    // return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, [state]);
   return (
     <section className="flex flex-col justify-center items-center">
