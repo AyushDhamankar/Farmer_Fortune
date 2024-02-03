@@ -101,26 +101,34 @@ const Transactions = ({ state }) => {
     }
   }
 
+  const fetchData = async () => {
+    try {
+      if (!contract || !value1 || !value2 || !value3) {
+        return; // Exit if contract or value1 is not available
+      }
+      getUser();
+      if (value2 == 1 && value3 == "false") {
+        getFarmerDetail();
+      } else if (value2 == 2 && value3 == "false") {
+        getDistributorDetail();
+      } else if (value2 == 3 && value3 == "false") {
+        getVendorDetail();
+      } else if (value2 == 0 && value3 == "true") {
+        getFarmerDetail();
+      } else if (value2 == 1 && value3 == "true") {
+        getDistributorDetail();
+      } else if (value2 == 2 && value3 == "true") {
+        getVendorDetail();
+      } else if (value2 == 3 && value3 == "true") {
+        getVendorDetail();
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    if (!contract || !value1 || !value2 || !value3) {
-      return; // Exit if contract or value1 is not available
-    }
-    getUser();
-    if (value2 == 1 && value3 == "false") {
-      getFarmerDetail();
-    } else if (value2 == 2 && value3 == "false") {
-      getDistributorDetail();
-    } else if (value2 == 3 && value3 == "false") {
-      getVendorDetail();
-    } else if(value2 == 0 && value3 == "true") {
-      getFarmerDetail();
-    } else if(value2 == 1 && value3 == "true") {
-      getDistributorDetail();
-    } else if(value2 == 2 && value3 == "true") {
-      getVendorDetail();
-    } else if(value2 == 3 && value3 == "true") {
-      getVendorDetail();
-    }
+    fetchData();
 
     // Setup interval to run fetchData every, for example, 5 seconds
     const intervalId = setInterval(() => {
