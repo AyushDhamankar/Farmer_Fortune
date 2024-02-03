@@ -18,6 +18,7 @@ const Register = ({ state }) => {
   const register = async (event) => {
     try {
       event.preventDefault();
+      setIsLoading(true);
       let Role;
       if (role == "farmer") {
         Role = 0;
@@ -51,6 +52,9 @@ const Register = ({ state }) => {
           progress: undefined,
           theme: "dark",
         });
+        setEmail('');
+        setName('');
+        setRole('');
         console.log("Hii");
         setIsLoading(false);
       } else {
@@ -86,7 +90,7 @@ const Register = ({ state }) => {
 
   return (
     <>
-    {isLoading && <Loading />}
+      {/* {isLoading && <Loading />} */}
       <ToastContainer />
       <section className="flex flex-col justify-center items-center">
         <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">
@@ -128,11 +132,11 @@ const Register = ({ state }) => {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <button
-                className="w-full border rounded-xl  py-4 px-4 bg-black font-bold text-white"
+                className="w-full flex items-center justify-center h-fit border rounded-xl  py-4 px-4 bg-black font-bold text-white"
                 type="submit"
                 onClick={register}
               >
-                Submit Now
+                {isLoading ? <div className="loader h-full" /> : "Submit Now"}
               </button>
             </form>
           </div>
