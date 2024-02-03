@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PostProduct from "../../assets/banner/post-product.webp";
 import Card from "../common/Card";
 import Loading from "../Loading/Loading";
+import SuccessModal from "../common/SuccessModal";
 
 const CreatePost = ({ state }) => {
   const [img, setImg] = useState("");
@@ -10,6 +11,7 @@ const CreatePost = ({ state }) => {
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const submitImage = async (event) => {
     try {
@@ -60,9 +62,17 @@ const CreatePost = ({ state }) => {
 
   const submitAndBlock = async (event) => {
     try {
+      setIsLoading(true);
       const imageUrl = await submitImage(event);
       await block(imageUrl);
+      setSuccess(true);
+      setPrice("");
+      setImg("");
+      setName("");
+      setQuantity("");
+      setDescription("");
     } catch (error) {
+      setSuccess(false);
       console.error(error);
     }
   };
@@ -162,108 +172,114 @@ const CreatePost = ({ state }) => {
 
   return (
     <>
-    {isLoading && <Loading />}
-    <section className="flex flex-col justify-center items-center">
-      <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">
-        Post Product
-      </div>
-      {role == 0 ? (
-        <>
-          <div className="md:px-20 px-6 flex flex-col md:flex-row justify-center gap-10 w-full h-full py-10">
-            <div className="md:w-[50%] flex flex-col gap-10">
-              <div className="md:text-xl max-md:text-center">
-                This provide transparent, tamper-resistant, and automated
-                execution of predefined agreements. tamper-resistant, and
-                automated tamper-resistant, and automated.
-              </div>
-              <form className="flex flex-col md:gap-6 gap-4">
-                <input
-                  type="file"
-                  name=""
-                  id=""
-                  placeholder="Image"
-                  className="w-full border rounded-xl  py-4 px-4 outline-none"
-                  onChange={(e) => setImg(e.target.files[0])}
-                />
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="Name"
-                  className="w-full border rounded-xl  py-4 px-4 outline-none"
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <textarea
-                  name=""
-                  id=""
-                  cols="30"
-                  rows="10"
-                  placeholder="Description"
-                  className="resize-none w-full border rounded-xl  py-4 px-4 outline-none"
-                  onChange={(e) => setDescription(e.target.value)}
-                ></textarea>
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="Quantity"
-                  className="w-full border rounded-xl  py-4 px-4 outline-none"
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="Price"
-                  className="w-full border rounded-xl  py-4 px-4 outline-none"
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-                <button
-                  className="w-full border rounded-xl  py-4 px-4 bg-black font-bold text-white"
-                  type="submit"
-                  onClick={submitAndBlock}
-                >
-                  Submit Now
-                </button>
-              </form>
-            </div>
-            <div className="w-[40%] h-full max-md:hidden">
-              <img
-                src={PostProduct}
-                alt=""
-                className="h-full w-full rounded-lg"
-              />
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="flex flex-wrap justify-center items-center gap-10 py-10">
-          {farmerPosts.length != 0 ? (
-            farmerPosts.map((post, index) => (
-              <>
-                <Card
-                  state={state}
-                  id={post.id}
-                  img={post.img}
-                  title={post.Product_name}
-                  desc={post.Product_description}
-                  owner={"Me"}
-                  quantity={post.Product_quantity}
-                  price={post.price}
-                  role={role}
-                  create_post={true}
-                  quantity_display={true}
-                />
-              </>
-            ))
-          ) : (
-            <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">
-              No Product is Purchased
-            </div>
-          )}
+      {/* {isLoading && <Loading />} */}
+      <section className="flex flex-col justify-center items-center">
+        <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">
+          Post Product
         </div>
+        {role == 0 ? (
+          <>
+            <div className="md:px-20 px-6 flex flex-col md:flex-row justify-center gap-10 w-full h-full py-10">
+              <div className="md:w-[50%] flex flex-col gap-10">
+                <div className="md:text-xl max-md:text-center">
+                  This provide transparent, tamper-resistant, and automated
+                  execution of predefined agreements. tamper-resistant, and
+                  automated tamper-resistant, and automated.
+                </div>
+                <form className="flex flex-col md:gap-6 gap-4">
+                  <input
+                    type="file"
+                    name=""
+                    id=""
+                    placeholder="Image"
+                    className="w-full border rounded-xl  py-4 px-4 outline-none"
+                    onChange={(e) => setImg(e.target.files[0])}
+                  />
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    placeholder="Name"
+                    className="w-full border rounded-xl  py-4 px-4 outline-none"
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <textarea
+                    name=""
+                    id=""
+                    cols="30"
+                    rows="10"
+                    placeholder="Description"
+                    className="resize-none w-full border rounded-xl  py-4 px-4 outline-none"
+                    onChange={(e) => setDescription(e.target.value)}
+                  ></textarea>
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    placeholder="Quantity"
+                    className="w-full border rounded-xl  py-4 px-4 outline-none"
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    placeholder="Price"
+                    className="w-full border rounded-xl  py-4 px-4 outline-none"
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                  <button
+                    className="w-full border flex items-center justify-center rounded-xl  py-4 px-4 bg-black font-bold text-white"
+                    type="submit"
+                    onClick={submitAndBlock}
+                  >
+                    {isLoading ? <div className="loader" /> : "Submit Now"}
+                  </button>
+                </form>
+              </div>
+              <div className="w-[40%] h-full max-md:hidden">
+                <img
+                  src={PostProduct}
+                  alt=""
+                  className="h-full w-full rounded-lg"
+                />
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-wrap justify-center items-center gap-10 py-10">
+            {farmerPosts.length != 0 ? (
+              farmerPosts.map((post, index) => (
+                <>
+                  <Card
+                    state={state}
+                    id={post.id}
+                    img={post.img}
+                    title={post.Product_name}
+                    desc={post.Product_description}
+                    owner={"Me"}
+                    quantity={post.Product_quantity}
+                    price={post.price}
+                    role={role}
+                    create_post={true}
+                    quantity_display={true}
+                  />
+                </>
+              ))
+            ) : (
+              <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10 uppercase">
+                No Product is Purchased
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+      {success && (
+        <SuccessModal
+          title={"Post Created Successfully"}
+          onClose={() => setSuccess(false)}
+        />
       )}
-    </section>
     </>
   );
 };
