@@ -18,15 +18,18 @@ const Navbar = ({ saveState }) => {
         // const web3 = new Web3(window.ethereum);
 
         // Replace 'YOUR_ALCHEMY_API_KEY' with your actual Alchemy API key
-        const alchemyApiKey = '_gda5EFG-n3zSegy8XdZfMkTORS8oWVd';
+        const alchemyApiKey = "_gda5EFG-n3zSegy8XdZfMkTORS8oWVd";
 
         // Use the Alchemy API URL for the Polygon Mumbai testnet
-        const alchemyUrl = 'https://polygon-mumbai.g.alchemy.com/v2/' + alchemyApiKey;
+        const alchemyUrl =
+          "https://polygon-mumbai.g.alchemy.com/v2/" + alchemyApiKey;
 
-        const alchemyweb3 = new Web3(new Web3.providers.HttpProvider(alchemyUrl));
+        const alchemyweb3 = new Web3(
+          new Web3.providers.HttpProvider(alchemyUrl)
+        );
 
         const web3 = new Web3(window.ethereum);
-  
+
         // Connect to the contract using its ABI and address
         const contract = new web3.eth.Contract(
           ABI, // Replace with your contract's ABI
@@ -37,24 +40,31 @@ const Navbar = ({ saveState }) => {
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
-  
+
         // Log user accounts
         console.log(accounts);
-  
+
         // Save Web3 and contract in the application state
-        saveState({ alchemyweb3: alchemyweb3, web3: web3, contract: contract, accounts: accounts });
-  
+        saveState({
+          alchemyweb3: alchemyweb3,
+          web3: web3,
+          contract: contract,
+          accounts: accounts,
+        });
+
         // Get user details from the contract
-        const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
+        const user = await contract.methods
+          .User_Type_Mapping(accounts[0])
+          .call();
         console.log(user);
-  
+
         // Set user details in component state
         setUserName(user.name);
         setUserType(user.role);
-  
+
         // Set flag indicating connection to MetaMask
         setConnectedToMeta(true);
-  
+
         // Log the contract for debugging
         console.log(contract);
       } else {
@@ -64,7 +74,7 @@ const Navbar = ({ saveState }) => {
     } catch (err) {
       console.error(err);
     }
-  };  
+  };
 
   const handleLogout = () => {
     // Implement logout functionality here
@@ -74,50 +84,68 @@ const Navbar = ({ saveState }) => {
     setConnectedToMeta(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     init();
   }, []);
 
   return (
-      <header className="flex md:sticky top-0 z-[100] md:backdrop-blur-3xl md:px-16 px-6 text-gray-600  w-full justify-between md:p-5 flex-col md:flex-row items-center">
-        <div className="flex items-center text-gray-900 mb-4 md:mb-0 md:w-36">
-          <Link to={'/'} className="ml-3 text-4xl font-bold">
-            B.
-          </Link>
-        </div>
-        <nav className="font-medium flex flex-wrap items-center text-base gap-x-5 justify-center">
-          <Link to="/explore" className=" hover:text-gray-900 cursor-pointer">Explore</Link>
-          <Link to="/farmer_create" className=" hover:text-gray-900 cursor-pointer">Create Post</Link>
-          <Link to="/mypost" className=" hover:text-gray-900 cursor-pointer">My Post</Link>
-        </nav>
+    <header className="flex md:sticky top-0 z-[100] md:backdrop-blur-3xl md:px-16 px-6 text-gray-600  w-full justify-between md:p-5 flex-col md:flex-row items-center">
+      <div className="flex items-center text-gray-900 mb-4 md:mb-0 md:w-36">
+        <Link to={"/"} className="ml-3 text-4xl font-bold">
+          B.
+        </Link>
+      </div>
+      <nav className="font-medium flex flex-wrap items-center text-base gap-x-5 justify-center">
+        <Link to="/explore" className=" hover:text-gray-900 cursor-pointer">
+          Explore
+        </Link>
+        <Link
+          to="/farmer_create"
+          className=" hover:text-gray-900 cursor-pointer"
+        >
+          Create Post
+        </Link>
+        <Link to="/mypost" className=" hover:text-gray-900 cursor-pointer">
+          My Post
+        </Link>
+      </nav>
+      <div
+        className={` ${
+          connectedToMeta ? "flex-row" : "flex-row-reverse"
+        } flex cursor-pointer duration-300 transition-all items-center max-md:pt-5"`}
+      >
         {!connectedToMeta ? (
-          <div className="flex flex-row-reverse cursor-pointer items-center max-md:pt-5">
-            <button
-              className={`items-center text-white bg-black border border-black py-1.5 pl-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`} onClick={init}
-            >
-              Connect Metamask
-            </button>
-            <img
-              src={Metamask}
-              alt=""
-              className="md:-mr-4 max-md:absolute max-md:mr-3 max-md:mt-3 max-md:top-0 max-md:right-0 z-[100] h-10"
-            />
-          </div>
+          <button
+            className={`items-center  text-white bg-black border border-black py-1.5 pl-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
+            onClick={init}
+          >
+            Connect Metamask
+          </button>
         ) : (
-          <div className="flex flex-row cursor-pointer items-center max-md:pt-5">
-            <button
-              className={`items-center text-black bg-white border border-black py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
-              onClick={handleLogout}
-            >
-              {username != "" ? username : "New User"} {usertype == 0 && username != "" ? "(F)" : usertype == 1 && username != "" ? "(D)" : usertype == 2 && username != "" ? "(V)" : usertype == 3 && username != "" ? "(C)" : ""}
-            </button>
-            <img
-              src={Metamask}
-              alt=""
-              className="md:-ml-4 max-md:absolute max-md:mr-3 max-md:mt-3 max-md:top-0 max-md:right-0 z-[100] h-10"
-            />
-          </div>
+          <button
+            className={`items-center text-black bg-white border border-black py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
+            onClick={handleLogout}
+          >
+            {username != "" ? username : "New User"}{" "}
+            {usertype == 0 && username != ""
+              ? "(F)"
+              : usertype == 1 && username != ""
+              ? "(D)"
+              : usertype == 2 && username != ""
+              ? "(V)"
+              : usertype == 3 && username != ""
+              ? "(C)"
+              : ""}
+          </button>
         )}
+        <img
+          src={Metamask}
+          alt=""
+          className={` ${
+            connectedToMeta ? "md:-ml-4 " : "md:-mr-4"
+          }  max-md:absolute max-md:mr-3 max-md:mt-3 max-md:top-0 max-md:right-0 z-[100] h-10`}
+        />
+      </div>
     </header>
   );
 };

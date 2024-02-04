@@ -29,7 +29,6 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    setLoadData(false);
     console.log(filteredPosts);
   }
 
@@ -57,7 +56,6 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    setLoadData(false);
     console.log(filteredPosts);
   }
 
@@ -82,7 +80,6 @@ const MyPost = ({ state }) => {
         filteredPosts.push(farmerPost);
       }
     }
-    setLoadData(false);
     setFarmerPosts(filteredPosts);
     console.log(filteredPosts);
   }
@@ -106,7 +103,6 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    setLoadData(false);
     console.log(filteredPosts);
   }
 
@@ -126,7 +122,6 @@ const MyPost = ({ state }) => {
         results.push(result);
       }
       console.log(results);
-      setLoadData(false);
       setFarmerPosts(results);
       console.log("Farmer Post Data:", results);
     } catch (error) {
@@ -144,7 +139,6 @@ const MyPost = ({ state }) => {
         .call();
       console.log("Hiii", distributor);
       await getFarmerPostData(distributor);
-    setLoadData(false);
     } catch (error) {
       console.log(error);
     }
@@ -153,7 +147,6 @@ const MyPost = ({ state }) => {
   // Function to fetch Farmer_Posts
   async function fetchFarmerPosts() {
     try {
-      setLoadData(true);
       const { contract, web3, accounts } = state;
       // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
@@ -198,9 +191,16 @@ const MyPost = ({ state }) => {
   }
 
   useEffect(() => {
-    getUser();
-    fetchFarmerPosts();
+    const fetch= async()=> {
+      setLoadData(true);
+      await getUser();
+      await fetchFarmerPosts();
+      setLoadData(false);
+    }
+    fetch();
+  }, [state]);
 
+  useEffect(() => {
     const intervalId = setInterval(() => {
       getUser();
       fetchFarmerPosts();
@@ -219,6 +219,7 @@ const MyPost = ({ state }) => {
           farmerPosts.map((post, index) => (
             <>
               <Card
+                key={index}
                 state={state}
                 id={post.id}
                 img={post.img}

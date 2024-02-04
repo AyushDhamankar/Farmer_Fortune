@@ -68,7 +68,6 @@ const Explore = ({ state }) => {
   // Example usage
   async function fetchData() {
     try {
-      setLoadData(true);
       const { contract, web3, accounts } = state;
       // const accounts = await web3.eth.getAccounts();
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
@@ -101,7 +100,6 @@ const Explore = ({ state }) => {
       }
       setFarmerPosts(posts);
       setFarmerPosts1(posts);
-      setLoadData(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -121,10 +119,16 @@ const Explore = ({ state }) => {
       setFarmerPosts(filteredPosts);
     }
   }
+  useEffect(() => {
+    const fetch= async()=> {
+      setLoadData(true);
+      await fetchData();
+      setLoadData(false);
+    }
+    fetch();
+  }, [state]);
 
   useEffect(() => {
-    fetchData();
-
     const intervalId = setInterval(() => {
       fetchData();
     }, 5000);
