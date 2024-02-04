@@ -110,6 +110,7 @@ const Navbar = ({ saveState }) => {
         </Link>
       </nav>
       <div
+        onClick={connectedToMeta? handleLogout: init}
         className={` ${
           connectedToMeta ? "flex-row" : "flex-row-reverse"
         } flex cursor-pointer duration-300 transition-all items-center max-md:pt-5"`}
@@ -117,14 +118,13 @@ const Navbar = ({ saveState }) => {
         {!connectedToMeta ? (
           <button
             className={`items-center  text-white bg-black border border-black py-1.5 pl-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
-            onClick={init}
           >
             Connect Metamask
           </button>
         ) : (
           <button
-            className={`items-center text-black bg-white border border-black py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
-            onClick={handleLogout}
+            className={`items-center text-black bg-[#ffffff80] border border-black py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
+            
           >
             {username != "" ? username : "New User"}{" "}
             {usertype == 0 && username != ""
