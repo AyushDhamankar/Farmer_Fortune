@@ -171,7 +171,6 @@ const Explore = ({ state }) => {
       <div className="flex flex-wrap justify-center items-center gap-10 py-10">
         {!loadData ? (
           farmerPosts?.map((post, index) => (
-            <>
               <Card
                 key={index}
                 state={state}
@@ -184,7 +183,6 @@ const Explore = ({ state }) => {
                 price={post.price}
                 role={role}
               />
-            </>
           ))
         ) : (
           <>

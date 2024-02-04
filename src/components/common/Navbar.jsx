@@ -90,7 +90,7 @@ const Navbar = ({ saveState }) => {
 
   return (
     <header className="flex md:sticky top-0 z-[100] md:backdrop-blur-3xl md:px-16 px-6 text-gray-600  w-full justify-between md:p-5 flex-col md:flex-row items-center">
-      <div className="flex items-center text-gray-900 mb-4 md:mb-0 md:w-36">
+      <div className="flex w-full items-center text-gray-900 mb-4 md:mb-0 md:w-36">
         <Link to={"/"} className="ml-3 text-4xl font-bold">
           B.
         </Link>
@@ -110,7 +110,7 @@ const Navbar = ({ saveState }) => {
         </Link>
       </nav>
       <div
-        onClick={connectedToMeta? handleLogout: init}
+        onClick={connectedToMeta ? handleLogout : init}
         className={` ${
           connectedToMeta ? "flex-row" : "flex-row-reverse"
         } flex cursor-pointer duration-300 transition-all items-center max-md:pt-5"`}
@@ -123,8 +123,7 @@ const Navbar = ({ saveState }) => {
           </button>
         ) : (
           <button
-            className={`items-center text-black bg-[#ffffff80] border border-black py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:hidden flex`}
-            
+            className={`items-center text-black bg-[#ffffff80] border border-black py-1 md:py-1.5 pr-6 px-4 focus:outline-none hover:bg-gray-200 rounded-2xl text-base md:mt-0 font-medium max-md:top-4 max-md:absolute max-md:right-7 flex`}
           >
             {username != "" ? username : "New User"}{" "}
             {usertype == 0 && username != ""
@@ -143,7 +142,7 @@ const Navbar = ({ saveState }) => {
           alt=""
           className={` ${
             connectedToMeta ? "md:-ml-4 " : "md:-mr-4"
-          }  max-md:absolute max-md:mr-3 max-md:mt-3 max-md:top-0 max-md:right-0 z-[100] h-10`}
+          }  max-md:absolute max-md:mr-3 max-md:mt-3.5 max-md:top-0 max-md:right-0 z-[100] h-10`}
         />
       </div>
     </header>

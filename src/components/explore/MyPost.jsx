@@ -17,7 +17,7 @@ const MyPost = ({ state }) => {
 
     for (let i = 0; i < length; i++) {
       const farmerPost = await contract.methods.Farmer_Post_Array(i).call();
-      console.log(`Farmer_Post[${i}]:`, farmerPost);
+      // console.log(`Farmer_Post[${i}]:`, farmerPost);
 
       if (
         farmerPost.Farmer_address.toLowerCase() === accounts[0].toLowerCase()
@@ -29,7 +29,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    console.log(filteredPosts);
+    // console.log(filteredPosts);
   }
 
   async function getDistributorPost(length) {
@@ -43,7 +43,7 @@ const MyPost = ({ state }) => {
       const farmerPost = await contract.methods
         .Distributor_Post_Array(i)
         .call();
-      console.log(`Farmer_Post[${i}]:`, farmerPost);
+      // console.log(`Farmer_Post[${i}]:`, farmerPost);
 
       if (
         farmerPost.Distributor_address.toLowerCase() ===
@@ -56,7 +56,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    console.log(filteredPosts);
+    // console.log(filteredPosts);
   }
 
   async function getVendorPost(length) {
@@ -68,7 +68,7 @@ const MyPost = ({ state }) => {
 
     for (let i = 0; i < length; i++) {
       const farmerPost = await contract.methods.Vendor_Post_Array(i).call();
-      console.log(`Farmer_Post[${i}]:`, farmerPost);
+      // console.log(`Farmer_Post[${i}]:`, farmerPost);
 
       if (
         farmerPost.Vendor_address.toLowerCase() === accounts[0].toLowerCase() &&
@@ -81,7 +81,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    console.log(filteredPosts);
+    // console.log(filteredPosts);
   }
 
   async function getVendorPost1(length) {
@@ -103,7 +103,7 @@ const MyPost = ({ state }) => {
       }
     }
     setFarmerPosts(filteredPosts);
-    console.log(filteredPosts);
+    // console.log(filteredPosts);
   }
 
   async function getFarmerPostData(indices) {
@@ -111,7 +111,7 @@ const MyPost = ({ state }) => {
       const { contract, web3 } = state;
       // Array to store results
       const results = [];
-      console.log(indices);
+      // console.log(indices);
 
       for (let i = 0; i < indices.length; i++) {
         const result = await contract.methods
@@ -121,9 +121,9 @@ const MyPost = ({ state }) => {
         result.price = result.Vendor_price;
         results.push(result);
       }
-      console.log(results);
+      // console.log(results);
       setFarmerPosts(results);
-      console.log("Farmer Post Data:", results);
+      // console.log("Farmer Post Data:", results);
     } catch (error) {
       console.error("Error calling Farmer_Post_Array:", error);
     }
@@ -133,11 +133,11 @@ const MyPost = ({ state }) => {
     try {
       const { contract, web3, accounts } = state;
       // const accounts = await web3.eth.getAccounts();
-      console.log("Distributor");
+      // console.log("Distributor");
       const distributor = await contract.methods
         .get_Owned_Properties(accounts[0], 2)
         .call();
-      console.log("Hiii", distributor);
+      // console.log("Hiii", distributor);
       await getFarmerPostData(distributor);
     } catch (error) {
       console.log(error);
@@ -152,20 +152,21 @@ const MyPost = ({ state }) => {
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
 
       let length;
+      // console.log("userRole" + user.role)
       if (user.role == 0) {
         length = await contract.methods.Farmer_Post_Counter().call();
         getFarmerPost(length);
-      } else if (user.role == 1) {
+      } else if (user.role === 1) {
         length = await contract.methods.Distributor_Post_Counter().call();
         getDistributorPost(length);
-      } else if (user.role == 2) {
+      } else if (user.role === 2) {
         length = await contract.methods.Vendor_Post_Counter().call();
         getVendorPost(length);
-      } else if (user.role == 3) {
+      } else if (user.role === 3) {
         get_Own_Product();
       }
 
-      console.log("Farmer_Post_Array Length:", length);
+      // console.log("Farmer_Post_Array Length:", length);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -217,7 +218,6 @@ const MyPost = ({ state }) => {
       <div className="flex flex-wrap justify-center items-center gap-10 py-10">
         {!loadData ? (
           farmerPosts.map((post, index) => (
-            <>
               <Card
                 key={index}
                 state={state}
@@ -232,7 +232,6 @@ const MyPost = ({ state }) => {
                 transaction_id={post.transaction_id}
                 role={role}
               />
-            </>
           ))
         ) : (
           <>
