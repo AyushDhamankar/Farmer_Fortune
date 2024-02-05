@@ -2,10 +2,15 @@ import React from "react";
 import Card from "../common/Card";
 import { useState, useEffect } from "react";
 import { Skeletoncard } from "../common/SkeletonCard";
+import { AnimatePresence } from "framer-motion";
+import Middleware from "../common/Middleware";
+import MyPost_IMG from "../../assets/svg/mypost-middleware.svg";
+
 
 const MyPost = ({ state }) => {
   const [farmerPosts, setFarmerPosts] = useState([]);
   const [role, setRole] = useState();
+  const [showMiddleware, setShowMiddleware] = useState(true);
   const [loadData, setLoadData] = useState(false);
 
   async function getFarmerPost(length) {
@@ -192,12 +197,12 @@ const MyPost = ({ state }) => {
   }
 
   useEffect(() => {
-    const fetch= async()=> {
+    const fetch = async () => {
       setLoadData(true);
       await getUser();
       await fetchFarmerPosts();
       setLoadData(false);
-    }
+    };
     fetch();
   }, [state]);
 
@@ -209,39 +214,56 @@ const MyPost = ({ state }) => {
 
     return () => clearInterval(intervalId);
   }, [state]);
-  return (
-    <section className="flex flex-col justify-center items-center">
-      <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10">
-        MY POSTS
-      </div>
 
-      <div className="flex flex-wrap justify-center items-center gap-10 py-10">
-        {!loadData ? (
-          farmerPosts.map((post, index) => (
-              <Card
-                key={index}
-                state={state}
-                id={post.id}
-                img={post.img}
-                title={post.Product_name}
-                desc={post.Product_description}
-                owner={"Me"}
-                quantity={post.Product_quantity}
-                price={post.price}
-                myposts={true}
-                transaction_id={post.transaction_id}
-                role={role}
-              />
-          ))
-        ) : (
-          <>
-            <Skeletoncard />
-            <Skeletoncard />
-            <Skeletoncard />
-          </>
-        )}
-      </div>
-    </section>
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowMiddleware(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      {showMiddleware ? (
+        <AnimatePresence>
+          <Middleware title={"My Post"} key={"my"} img={MyPost_IMG}/>
+        </AnimatePresence>
+      ) : (
+        <section className="flex flex-col justify-center items-center">
+          <div className="text-5xl md:text-[75px] md:leading-snug font-bold py-10">
+            MY POSTS
+          </div>
+
+          <div className="flex flex-wrap justify-center items-center gap-10 py-10">
+            {!loadData ? (
+              farmerPosts.map((post, index) => (
+                <Card
+                  key={index}
+                  state={state}
+                  id={post.id}
+                  img={post.img}
+                  title={post.Product_name}
+                  desc={post.Product_description}
+                  owner={"Me"}
+                  quantity={post.Product_quantity}
+                  price={post.price}
+                  myposts={true}
+                  transaction_id={post.transaction_id}
+                  role={role}
+                />
+              ))
+            ) : (
+              <>
+                <Skeletoncard />
+                <Skeletoncard />
+                <Skeletoncard />
+              </>
+            )}
+          </div>
+        </section>
+      )}
+    </>
   );
 };
 
