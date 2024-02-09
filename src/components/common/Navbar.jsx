@@ -92,8 +92,8 @@ const Navbar = ({ saveState }) => {
   return (
     <header className="flex md:sticky top-0 z-[100] md:backdrop-blur-3xl md:px-16 px-6 text-gray-600  w-full justify-between md:py-2 flex-col md:flex-row items-center h-[12vh]">
       <div className="flex w-full items-center text-gray-900 mb-4 md:mb-0 md:w-36 h-full">
-        <Link to={"/"} className="ml-3 text-4xl font-bold h-full">
-          <img src={Logo} alt="" className="w-full h-full" />
+        <Link to={"/"} className="ml-3 text-4xl font-bold h-full" style={{ display: 'flex', alignItems: 'center' }}>
+          <img src={Logo} alt="" className="w-full h-full" style={{ height: '60px', width: '60px' }} />
         </Link>
       </div>
       <nav className="font-medium flex flex-wrap items-center text-base gap-x-5 justify-center">

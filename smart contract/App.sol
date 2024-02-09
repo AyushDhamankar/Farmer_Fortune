@@ -203,21 +203,71 @@ contract App {
         Remove_From_Owned_Product(Vendor_Post_id, 1);
     }
 
+    // function Transfer_to_Vendor(uint Vendor_Post_id, uint quantity) public payable  {
+    //     require(User_Type_Mapping[msg.sender].role != Role.Farmer || User_Type_Mapping[msg.sender].role != Role.Distributor || User_Type_Mapping[msg.sender].role != Role.Vendor, "You are not the Customer");
+    //     require(quantity <= Vendor_Post_Array[Vendor_Post_id].Product_quantity, "Please enter the correct quantity");
+    //     uint value = quantity * Vendor_Post_Array[Vendor_Post_id].Vendor_price;
+
+    //     uint part1 = (value * 30) / 100;  // 30% of the value
+    //     uint part2 = (value * 10) / 100;  // 10% of the value
+    //     uint part3 = (value * 50) / 100;  // 50% of the value
+
+    //     payable(owner).transfer(part2);
+    //     payable(Vendor_Post_Array[Vendor_Post_id].Vendor_address).transfer(part3);
+    //     payable(Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address).transfer(part2);
+    //     payable(Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address).transfer(part1);
+
+    //     // Transactions memory newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Vendor_Post_Array[Vendor_Post_id].Vendor_address].name,"(V)")), Vendor_Post_Array[Vendor_Post_id].Vendor_address, msg.value);
+    //     // Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+    //     Transactions memory newTransaction; 
+    //     newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Vendor_Post_Array[Vendor_Post_id].Vendor_address].name,"(V)")), Vendor_Post_Array[Vendor_Post_id].Vendor_address, part3);
+    //     Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+    //     newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address].name,"(D)")), Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address, part1);
+    //     Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+    //     newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address].name,"(F)")), Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address, part2);
+    //     Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+    //     newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, "Owner", owner, part2);
+    //     Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+    //     Vendor_Post_Array[Vendor_Post_id].Product_quantity -= quantity;
+    //     Customer_Owned_Product[msg.sender].push(Vendor_Post_id);
+    //     if(Vendor_Post_Array[Vendor_Post_id].Product_quantity == 0) {
+    //         Vendor_Post_Array[Vendor_Post_id].status = 1;
+    //     }
+    // }
+
     function Transfer_to_Vendor(uint Vendor_Post_id, uint quantity) public payable  {
         require(User_Type_Mapping[msg.sender].role != Role.Farmer || User_Type_Mapping[msg.sender].role != Role.Distributor || User_Type_Mapping[msg.sender].role != Role.Vendor, "You are not the Customer");
         require(quantity <= Vendor_Post_Array[Vendor_Post_id].Product_quantity, "Please enter the correct quantity");
-        uint value = quantity * Vendor_Post_Array[Vendor_Post_id].Vendor_price;
+        uint Vendor_price = quantity * Vendor_Post_Array[Vendor_Post_id].Vendor_price;
+        uint Distributor_price = quantity * Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_price;
+        uint value = Vendor_price - Distributor_price;
 
-        uint part1 = (value * 30) / 100;  // 30% of the value
-        uint part2 = (value * 10) / 100;  // 10% of the value
-        uint part3 = (value * 50) / 100;  // 50% of the value
+        // Perform the calculations using fixed-point arithmetic
+        uint part1 = (value * 19e16) / 1e18;  // 19% of the value
+        uint part2 = (value * 1e16) / 1e18;   // 1% of the value
+        uint part3 = (value * 40e16) / 1e18;  // 40% of the value
 
         payable(owner).transfer(part2);
         payable(Vendor_Post_Array[Vendor_Post_id].Vendor_address).transfer(part3);
-        payable(Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address).transfer(part2);
-        payable(Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address).transfer(part1);
+        payable(Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address).transfer(part1);
+        payable(Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address).transfer(part3);
 
-        Transactions memory newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Vendor_Post_Array[Vendor_Post_id].Vendor_address].name,"(V)")), Vendor_Post_Array[Vendor_Post_id].Vendor_address, msg.value);
+        Transactions memory newTransaction; 
+        newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Vendor_Post_Array[Vendor_Post_id].Vendor_address].name,"(V)")), Vendor_Post_Array[Vendor_Post_id].Vendor_address, part3);
+        Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+        newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address].name,"(D)")), Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Distributor_address, part1);
+        Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+        newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, string(abi.encodePacked(User_Type_Mapping[Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address].name,"(F)")), Farmer_Post_Array[Distributor_Post_Array[Vendor_Post_Array[Vendor_Post_id].Distributor_Post_id].Farmer_Post_id].Farmer_address, part3);
+        Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
+
+        newTransaction = Transactions(block.timestamp, string(abi.encodePacked(User_Type_Mapping[msg.sender].name,"(C)")), msg.sender, "Owner", owner, part2);
         Transactions_Mapping[Vendor_Post_Array[Vendor_Post_id].transactions_id].push(newTransaction);
 
         Vendor_Post_Array[Vendor_Post_id].Product_quantity -= quantity;
