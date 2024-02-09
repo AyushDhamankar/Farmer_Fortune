@@ -131,12 +131,12 @@ const Transactions = ({ state }) => {
     fetchData();
 
     // Setup interval to run fetchData every, for example, 5 seconds
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 1000); // 1000 milliseconds = 1 seconds
+    // const intervalId = setInterval(() => {
+    //   fetchData();
+    // }, 1000); // 1000 milliseconds = 1 seconds
 
     // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, [contract, value1, value2, value3]);
 
   //

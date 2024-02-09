@@ -38,17 +38,16 @@ const MyPost = ({ state }) => {
   }
 
   async function getDistributorPost(length) {
-    const { contract, web3, accounts } = state;
-    // const accounts = await window.ethereum.request({
-    //   method: "eth_requestAccounts",
-    // });
+    const { contract, web3 } = state;
+    const accounts = await web3.eth.getAccounts();
     const filteredPosts = [];
 
+    console.log("Hiiii");
     for (let i = 0; i < length; i++) {
       const farmerPost = await contract.methods
         .Distributor_Post_Array(i)
         .call();
-      // console.log(`Farmer_Post[${i}]:`, farmerPost);
+      console.log(`Farmer_Post[${i}]:`, farmerPost);
 
       if (
         farmerPost.Distributor_address.toLowerCase() ===
@@ -152,22 +151,24 @@ const MyPost = ({ state }) => {
   // Function to fetch Farmer_Posts
   async function fetchFarmerPosts() {
     try {
-      const { contract, web3, accounts } = state;
-      // const accounts = await web3.eth.getAccounts();
+      const { contract, web3 } = state;
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts[0]);
       const user = await contract.methods.User_Type_Mapping(accounts[0]).call();
+      console.log(user);
 
       let length;
       // console.log("userRole" + user.role)
       if (user.role == 0) {
         length = await contract.methods.Farmer_Post_Counter().call();
         getFarmerPost(length);
-      } else if (user.role === 1) {
+      } else if (user.role == 1) {
         length = await contract.methods.Distributor_Post_Counter().call();
         getDistributorPost(length);
-      } else if (user.role === 2) {
+      } else if (user.role == 2) {
         length = await contract.methods.Vendor_Post_Counter().call();
         getVendorPost(length);
-      } else if (user.role === 3) {
+      } else if (user.role == 3) {
         get_Own_Product();
       }
 
