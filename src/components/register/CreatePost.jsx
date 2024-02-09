@@ -175,7 +175,7 @@ const CreatePost = ({ state }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowMiddleware(false);
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
